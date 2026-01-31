@@ -1,4 +1,3 @@
-
 services:
 
   # -------------------- MINIO --------------------
@@ -25,7 +24,7 @@ services:
     environment:
       - NIFI_WEB_HTTPS_PORT=8443
       - SINGLE_USER_CREDENTIALS_USERNAME=admin
-      - SINGLE_USER_CREDENTIALS_PASSWORD=admin123
+      - SINGLE_USER_CREDENTIALS_PASSWORD=admin123wisdom
     volumes:
       - nifi_data:/opt/nifi/nifi-current/data
     networks:
@@ -65,9 +64,9 @@ services:
 
   # -------------------- SPARK --------------------
   spark:
-    image: apache/spark:3.4.1
+    build: ./spark
     container_name: spark
-    command: ["/opt/spark/bin/spark-class", "org.apache.spark.deploy.master.Master"]
+    command: [ "/opt/spark/bin/spark-class", "org.apache.spark.deploy.master.Master" ]
     ports:
       - "8080:8080"
       - "7077:7077"
@@ -76,10 +75,11 @@ services:
     networks:
       - data-net
 
-
+# -------------------- NETWORK --------------------
 networks:
   data-net:
 
+    # -------------------- VOLUMES --------------------
 volumes:
   minio_data:
   nifi_data:
