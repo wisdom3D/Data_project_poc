@@ -90,6 +90,29 @@ services:
     networks:
       - data-net
 
+  # -------------------- SUPERSET --------------------
+  superset:
+    image: apache/superset:latest
+    container_name: superset
+    user: "root"
+    ports:
+      - "8088:8088"
+    environment:
+      - SUPERSET_SECRET_KEY=wisdom_secret_key_2026
+      - ADMIN_USERNAME=admin
+      - ADMIN_PASSWORD=admin
+    volumes:
+      - superset_data:/app/superset
+    networks:
+      - data-net
+    # Initialisation de Superset
+    command: >
+      sh -c "pip install --no-cache-dir --target /app/.venv/lib/python3.10/site-packages trino sqlalchemy-trino &&
+            superset db upgrade &&
+            superset fab create-admin --username admin --firstname Superset --lastname Admin --email admin@wisdom.com --password admin &&
+            superset init &&
+            /usr/bin/run-server.sh"
+
 # -------------------- NETWORK --------------------
 networks:
   data-net:
@@ -99,3 +122,4 @@ volumes:
   minio_data:
   nifi_data:
   postgres_data:
+  superset_data:
