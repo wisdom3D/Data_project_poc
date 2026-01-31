@@ -59,8 +59,23 @@ services:
       - DB_USER=metadata
       - DB_PASSWORD=metadata
       - DB_NAME=metadata_db
+      - DB_SCHEME=postgresql
+      - DB_DRIVER_CLASS=org.postgresql.Driver
     networks:
       - data-net
+
+  # -------------------- TRINO --------------------
+  trino:
+    image: trinodb/trino:latest
+    container_name: trino
+    ports:
+      - "8081:8080"
+    volumes:
+      - ./trino/etc:/etc/trino:ro
+    networks:
+      - data-net
+    depends_on:
+      - minio
 
   # -------------------- SPARK --------------------
   spark:

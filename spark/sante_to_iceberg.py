@@ -6,7 +6,10 @@ spark = (
     .appName("Sante-Raw-to-Iceberg")
     .config("spark.sql.extensions", "org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions")
     .config("spark.sql.catalog.demo", "org.apache.iceberg.spark.SparkCatalog")
-    .config("spark.sql.catalog.demo.type", "hadoop")
+    .config("spark.sql.catalog.demo.catalog-impl", "org.apache.iceberg.jdbc.JdbcCatalog")
+    .config("spark.sql.catalog.demo.uri", "jdbc:postgresql://postgres:5432/iceberg_catalog")
+    .config("spark.sql.catalog.demo.jdbc.user", "metadata")
+    .config("spark.sql.catalog.demo.jdbc.password", "metadata")
     .config("spark.sql.catalog.demo.warehouse", "s3a://clean/warehouse")
     .config("spark.hadoop.fs.s3a.endpoint", "http://minio:9000")
     .config("spark.hadoop.fs.s3a.access.key", "minioadmin")
@@ -31,6 +34,6 @@ df_clean = (
 )
 
 # Écriture Iceberg
-df_clean.writeTo("demo.sante_covid").using("iceberg").createOrReplace()
+df_clean.writeTo("demo.public.sante_covid").using("iceberg").createOrReplace()
 
 spark.stop()
