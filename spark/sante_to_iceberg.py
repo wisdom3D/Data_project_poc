@@ -1,5 +1,5 @@
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col
+from pyspark.sql.functions import col, to_date
 
 spark = (
     SparkSession.builder
@@ -31,6 +31,18 @@ df_clean = (
     df
     .dropDuplicates()
     .filter(col("location").isNotNull())
+    .withColumn("last_updated_date", to_date(col("last_updated_date")))
+    .withColumn("total_cases", col("total_cases").cast("float"))
+    .withColumn("new_cases", col("new_cases").cast("float"))
+    .withColumn("new_cases_smoothed", col("new_cases_smoothed").cast("float"))
+    .withColumn("total_deaths", col("total_deaths").cast("float"))
+    .withColumn("total_cases_per_million", col("total_cases_per_million").cast("float"))
+    .withColumn("new_cases_per_million", col("new_cases_per_million").cast("float"))
+    .withColumn("new_cases_smoothed", col("new_cases_smoothed").cast("float"))
+    .withColumn("new_cases_smoothed_per_million", col("new_cases_smoothed_per_million").cast("float"))
+    .withColumn("total_deaths_per_million", col("total_deaths_per_million").cast("float"))
+    .withColumn("new_deaths_per_million", col("new_deaths_per_million").cast("float"))
+    .withColumn("new_deaths_smoothed_per_million", col("new_deaths_smoothed_per_million").cast("float"))
 )
 
 # Écriture Iceberg
