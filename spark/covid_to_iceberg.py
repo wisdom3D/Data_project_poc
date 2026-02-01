@@ -3,7 +3,7 @@ from pyspark.sql.functions import col, to_date
 
 spark = (
     SparkSession.builder
-    .appName("Sante-Raw-to-Iceberg")
+    .appName("Covid-Raw-to-Iceberg")
     .config("spark.sql.extensions", "org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions")
     .config("spark.sql.catalog.demo", "org.apache.iceberg.spark.SparkCatalog")
     .config("spark.sql.catalog.demo.catalog-impl", "org.apache.iceberg.jdbc.JdbcCatalog")
@@ -23,7 +23,7 @@ spark = (
 df = (
     spark.read
     .option("header", "true")
-    .csv("s3a://raw/sante/")
+    .csv("s3a://raw/covid/")
 )
 
 # Nettoyage minimal (exemple)
@@ -46,6 +46,6 @@ df_clean = (
 )
 
 # Écriture Iceberg
-df_clean.writeTo("demo.public.sante_covid").using("iceberg").createOrReplace()
+df_clean.writeTo("demo.public.covid").using("iceberg").createOrReplace()
 
 spark.stop()

@@ -26,6 +26,7 @@ services:
       - SINGLE_USER_CREDENTIALS_USERNAME=admin
       - SINGLE_USER_CREDENTIALS_PASSWORD=admin123wisdom
     volumes:
+      - nifi_conf:/opt/nifi/nifi-current/conf
       - nifi_data:/opt/nifi/nifi-current/data
     networks:
       - data-net
@@ -102,14 +103,14 @@ services:
       - ADMIN_USERNAME=admin
       - ADMIN_PASSWORD=admin
     volumes:
-      - superset_data:/app/superset
+      - superset_data:/app/superset_home
     networks:
       - data-net
     # Initialisation de Superset
     command: >
       sh -c "pip install --no-cache-dir --target /app/.venv/lib/python3.10/site-packages trino sqlalchemy-trino &&
             superset db upgrade &&
-            superset fab create-admin --username admin --firstname Superset --lastname Admin --email admin@wisdom.com --password admin &&
+            superset fab create-admin --username admin --firstname Superset --lastname Admin --email admin@wisdom.com --password admin || true &&
             superset init &&
             /usr/bin/run-server.sh"
 
@@ -121,5 +122,6 @@ networks:
 volumes:
   minio_data:
   nifi_data:
+  nifi_conf:
   postgres_data:
   superset_data:
