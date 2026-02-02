@@ -10,7 +10,7 @@ L'architecture repose sur le paradigme **Lakehouse** utilisant Apache Iceberg.
 
 ![Superset dashboard](images/Superset_dash.png)
 
-```mermaid
+```
     NiFi --> Raw
     Spark -- Read --> Raw
     Spark -- Write --> Warehouse
